@@ -4,7 +4,7 @@ from Setup.views import *
 
 urlpatterns = [
 
-    path('', home, name='home-page'),
+    path('home', home, name='home-page'),
     path('item', item, name='item-data'),
     path('supplier', supplier, name='supplier-data'),
     path('customer', customer, name='customer-data'),
