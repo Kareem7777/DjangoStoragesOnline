@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
-@login_required
+#@login_required
 def home(request):
     page_title = 'Setup Home Page'
     return render(request, 'home.html', {'page_title': page_title})
