@@ -14,7 +14,7 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def home(request):
     page_title = 'Setup Home Page'
-    return render(request, 'setup.html', {'page_title': page_title})
+    return render(request, 'home.html', {'page_title': page_title})
 
 
 def item(request):
