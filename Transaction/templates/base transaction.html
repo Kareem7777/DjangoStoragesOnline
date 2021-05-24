@@ -14,7 +14,7 @@
 <body>
   {% if user.is_authenticated %}
   <div class="menu-bar">
-    {% load static %}<a class="logo" href=""><img class="logo" src="{% static 'imgs/logoo.png'%}" alt=""></a>
+    {% load static %}<a class="logo" href="{% url 'home-page' %}"><img class="logo" src="{% static 'imgs/logoo.png'%}" alt=""></a>
     <div class="logout"> <a  class="logout-bottom" href="{% url 'logout' %}"> log out</a></div>
   {% endif %}
       <ul class="position">
