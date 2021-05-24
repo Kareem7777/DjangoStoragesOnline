@@ -5,20 +5,59 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Ma5azen</title>
-    {%load static%}
-    <link rel="stylesheet" href="{% static '/setup.css' %}">
+    {%load static%}<link rel="stylesheet" href="{% static '/m.css' %}">
+    <!-- {%load static%}<link rel="stylesheet" href="{% static '/setup.css' %}"> -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Original+Surfer&display=swap" rel="stylesheet">
-    {% load static %}<link rel="icon" href="{% static '/imgs/logo.png' %}" type="image/x-icon">
-    
+    {% load static %}<link rel="icon" href="{% static '/imgs/logoo.png' %}" type="image/x-icon">
 </head>
 <body>
-    <h1>our project</h1>
-    {% if user.is_authenticated %}
-	<a href="{% url 'logout' %}">logout</a>
-	{% endif %}
+  {% if user.is_authenticated %}
+  <div class="menu-bar">
+    {% load static %}<a class="logo" href=""><img class="logo" src="{% static 'imgs/logoo.png'%}" alt=""></a>
+    <div class="logout"> <a  class="logout-bottom" href="{% url 'logout' %}"> log out</a></div>
+  {% endif %}
+      <ul class="position">
+          <li><a href="#">Data Section</a>
+              <div class="sub-menu-1">
+                  <ul>
+                      <li><a class="" href="{% url 'storage-data'%}" target="_blank" >Storage</a></li>
+                      <li><a class="" href="{% url 'supplier-data'%}" target="_blank" >Supplier</a></li>
+                      <li><a class="" href="{% url 'customer-data'%}" target="_blank" >Customer</a></li>
+                      <li><a class="" href="{% url 'item-data'%}" target="_blank" >Item</a></li>
+                      <li><a class="" href="{% url 'master-in-data'%}" target="_blank" >In</a></li>
+                      <li><a class="" href="{% url 'master-out-data'%}" target="_blank" >Out</a></li>
+                  </ul>
+              </div>
+          </li>
+          <li><a href="#">Reports </a>
+              <div class="sub-menu-1">
+                  <ul>
+                      <li><a class="" href="{% url 'suppliers-report'%}" target="_blank" >Suppliers Report</a></li>
+                      <li><a class="" href="{% url 'customers-report'%}" target="_blank" >Customers Report</a></li>
+                      <li><a class="" href="{% url 'items-report'%}" target="_blank" >Items Report</a></li>
 
-    {% block content %}
-    {% endblock %}
+                  </ul>
+              </div>
+          </li>          
+          <li><a href="#">Addition Section</a>
+              <div class="sub-menu-1">
+                  <ul>
+                      <li><a class="" href="{% url 'add-item'%}" target="_blank" >Item </a></li>
+                      <li><a class="" href="{% url 'add-storage'%}" target="_blank" >Storage </a></li>
+                      <li><a class="" href="{% url 'add-supplier'%}" target="_blank" >Supplier </a></li>
+                      <li><a class="" href="{% url 'add-customer'%}" target="_blank" >Customer </a></li>
+                      <li><a class="" href="{% url 'add-master-in'%}" target="_blank" >Master-In </a></li>
+                      <li><a class="" href="{% url 'add-master-out'%}" target="_blank" >Master-Out </a></li>
+                      <li><a class="" href="{% url 'add-detail-in'%}" target="_blank" >Detail-In </a></li>
+                      <li><a class="" href="{% url 'add-detail-out'%}" target="_blank" >Detail-Out </a></li>
+                  </ul>
+              </div>
+          </li>
+      </ul>
+  </div>
+
+  {% block content %}
+  {% endblock %}
 </body>
 </html>

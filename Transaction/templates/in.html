@@ -1,7 +1,7 @@
 {% extends 'base transaction.html' %}
 {%csrf_token%}
 {% block content %}
-    <nav>
+    <!-- <nav>
         <div class="links">
             <a class="a" href="{% url 'home-page' %}">Home Page</a>
             <a class="a" href="{% url 'storage-data' %}">Storage Data </a>
@@ -11,15 +11,11 @@
             <a class="a" href="{% url 'master-out-data' %}">Out Data </a>
         </div>
         
-    </nav>
-    <br/>
-    <br/>
+    </nav> -->
     <center>
       <table >
+        <caption><h2 class="itemsdata"><b class="itemsfont"> {{page_title}}</b></h2></caption>
         <thead>
-          <tr>
-            <td  colspan="9999" class="itemsdata" ><b class="itemsfont"> master In Data</b></td>
-          </tr>
           <tr>
             <td>code</td>
             <td>date</td>
@@ -33,8 +29,8 @@
         </thead>
         <tbody>
             {% for m in data %}
-            <tr class="code">
-              <td text-align="center"><a href="{% url 'detail-in' m.master_in_id %}">{{ m.master_in_code }}</a></td>
+            <tr class="code" >
+              <td text-align="center"><a class="button"  href="{% url 'detail-in' m.master_in_id %}">{{ m.master_in_code }}</a></td>
               <td text-align="center">{{ m.master_in_date }}</td>
               <td text-align="center">{{ m.master_in_movenumber }}</td>
               <td text-align="center">{{ m.master_in_notes }}</td>
