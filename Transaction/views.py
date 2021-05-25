@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+from django.urls import reverse
 from Transaction.models import *
 from Transaction.forms import *
 from Setup.models import *
@@ -32,18 +33,15 @@ def addmaster_in(request):
     pp = supplier.objects.all()
     cc = customer.objects.all()
     ii = items.objects.all()
-    submitted = False
     if request.method == 'POST':
         newmaster_in = addmaster_inForm(request.POST)
-
         if newmaster_in.is_valid():
             newmaster_in.save()
-        return HttpResponseRedirect('/Transaction/addmaster_in?submitted=True')
+        return HttpResponseRedirect(reverse('add-master-in'))
     else:
         newmaster_in = addmaster_inForm
-        if 'submitted' in request.GET:
-            submitted = True
-    return render(request, 'addmaster_in.html', {'page_title':page_title,'data': aa, 'item_data': ii, 'storage_data': ss, 'customer_data': cc, 'supplier_data': pp, 'submitted': submitted})
+    args ={'page_title':page_title,'data': aa, 'item_data': ii, 'storage_data': ss, 'customer_data': cc, 'supplier_data': pp}
+    return render(request, 'addmaster_in.html',args )
 
 
 def addmaster_out(request):
@@ -52,18 +50,16 @@ def addmaster_out(request):
     ss = storage.objects.all()
     pp = supplier.objects.all()
     cc = customer.objects.all()
-    submitted = False
     if request.method == 'POST':
         newmaster_out = addmaster_outForm(request.POST or None)
 
         if newmaster_out.is_valid():
             newmaster_out.save()
-        return HttpResponseRedirect('/Transaction/addmaster_out?submitted=True')
+        return HttpResponseRedirect(reverse('add-master-out'))
     else:
         newmaster_out = addmaster_outForm
-        if 'submitted' in request.GET:
-            submitted = True
-    return render(request, 'addmaster_out.html', {'page_title':page_title,'data': aa, 'storage_data': ss, 'customer_data': cc, 'supplier_data': pp, 'submitted': submitted})
+    args = {'page_title':page_title,'data': aa, 'storage_data': ss, 'customer_data': cc, 'supplier_data': pp}
+    return render(request, 'addmaster_out.html',args )
 
 
 def adddetail_in(request):
@@ -71,18 +67,16 @@ def adddetail_in(request):
     mm = master_in.objects.all()
     aa = detail_in.objects.all()
     ii = items.objects.all()
-    submitted = False
     if request.method == 'POST':
         newdetail_in = adddetail_inForm(request.POST or None)
 
         if newdetail_in.is_valid():
             newdetail_in.save()
-        return HttpResponseRedirect('/Transaction/adddetail_in?submitted=True')
+        return HttpResponseRedirect(reverse('add-detail-in'))
     else:
         newdetail_in = adddetail_inForm
-        if 'submitted' in request.GET:
-            submitted = True
-    return render(request, 'adddetail_in.html', {'page_title':page_title,'detail_in_data': aa, 'item_data': ii, 'master_in_data': mm, 'submitted': submitted})
+    args = {'page_title':page_title,'detail_in_data': aa, 'item_data': ii, 'master_in_data': mm}
+    return render(request, 'adddetail_in.html',args )
 
 
 def adddetail_out(request):
@@ -90,18 +84,16 @@ def adddetail_out(request):
     mm = master_out.objects.all()
     aa = detail_out.objects.all()
     ii = items.objects.all()
-    submitted = False
     if request.method == 'POST':
         newdetail_out = adddetail_outForm(request.POST or None)
 
         if newdetail_out.is_valid():
             newdetail_out.save()
-        return HttpResponseRedirect('/Transaction/adddetail_out?submitted=True')
+        return HttpResponseRedirect(reverse('add-detail-out'))
     else:
         newdetail_out = adddetail_outForm
-        if 'submitted' in request.GET:
-            submitted = True
-    return render(request, 'adddetail_out.html', {'page_title':page_title,'detail_out_data': aa, 'item_data': ii, 'master_out_data': mm, 'submitted': submitted})
+    args = {'page_title':page_title,'detail_out_data': aa, 'item_data': ii, 'master_out_data': mm}
+    return render(request, 'adddetail_out.html',args )
 
 
 def detail_in_fun(request, foreign_master_in_id):
@@ -116,48 +108,6 @@ def detail_out_fun(request, foreign_master_out_id):
     aa = master_out.objects.get(master_out_id=foreign_master_out_id)
     bb = detail_out.objects.filter(Master_out_id=foreign_master_out_id)
     return render(request, 'detail_out.html', {'page_title':page_title,'data': aa, 'zata': bb})
-
-
-# def item_report(request, the_item):
-#     item_data = items.objects.get(items_id=the_item)
-#     detail_in_data = detail_in.objects.filter(Items_id=the_item)
-#     detail_out_data = detail_out.objects.filter(Items_id=the_item)
-#     bbb = 0
-#     ddd = 0
-#     page_title = 'Item Report'
-#     for i in detail_in_data:
-#         sumin = i.detail_in_quantity
-#         bbb += sumin
-#     for u in detail_out_data:
-#         sumout = u.detail_out_quantity
-#         ddd += sumout
-#     sumtot = bbb - ddd
-#     return render(request, 'itemreport.html', {'item_data': item_data,
-#                                                'detail_in_data': detail_in_data, 'detail_out_data': detail_out_data,
-#                                                'sumin': bbb, 'sumout': ddd, 'sumtot': sumtot, 'page_title': page_title})
-
-# def supplier_report(request,the_supplier):
-#     page_title='Supplier Report'
-#     sumin = 0
-#     sumout = 0
-#     supplier_data = supplier.objects.get(supplier_id= the_supplier)
-#     master_in_data = master_in.objects.filter(Supplier_id=the_supplier)
-#     master_out_data = master_out.objects.filter(Supplier_id=the_supplier)
-#     for mi in master_in_data:
-#         the_master_in = mi.master_in_id
-#         detail_in_data = detail_in.objects.filter(Master_in_id=the_master_in)
-#         for di in detail_in_data:
-#             bb  = (di.detail_in_quantity)*(di.detail_in_price)
-#             sumin +=bb
-#     for mo in master_out_data:
-#         the_master_out = mo.master_out_id
-#         detail_out_data = detail_out.objects.filter(Master_out_id = the_master_out)
-#         for do in detail_out_data:
-#             tt = (do.detail_out_quantity)*(do.detail_out_price)
-#             sumout+=tt
-#     sumtot = sumin-sumout
-#     return render (request, 'supplierreport.html',{'supplier_data':supplier_data,'detail_in_data':detail_in_data,
-#     'page_title':page_title,'sumtot':f"{sumtot:,}"})
 
 
 def try_in(request):
@@ -199,19 +149,16 @@ def cash_in_view(request):  # nod finished
     mm = cash_in.objects.all()
     oo = customer.objects.all()
     ii = supplier.objects.all()
-    submitted = False
     if request.method == 'POST':
         addcash_inval = addcash_inForm(request.POST or None)
 
         if addcash_inval.is_valid():
             addcash_inval.save()
-        # return HttpResponseRedirect ('/Transaction/adddetail_in?submitted=True') #nod finished
+        return HttpResponseRedirect (reverse('cash-in-view'))
     else:
         addcash_inval = addcash_inForm
-        if 'submitted' in request.GET:
-            submitted = True
-    # nod finished
-    return render(request, 'cash_in_view.html', {'page_title':page_title,'oata': oo, 'iata': ii, 'mata': mm, 'submitted': submitted})
+    args = {'page_title':page_title,'oata': oo, 'iata': ii, 'mata': mm}
+    return render(request, 'cash_in_view.html',args )
 
 
 def suppliers_report(request):
@@ -300,3 +247,47 @@ def items_report(request):
     my_list = zip(ii, total)
     args = {'page_title': page_title, 'my_list': my_list}
     return render(request, 'items_report.html', args)
+
+
+
+
+# def item_report(request, the_item):
+#     item_data = items.objects.get(items_id=the_item)
+#     detail_in_data = detail_in.objects.filter(Items_id=the_item)
+#     detail_out_data = detail_out.objects.filter(Items_id=the_item)
+#     bbb = 0
+#     ddd = 0
+#     page_title = 'Item Report'
+#     for i in detail_in_data:
+#         sumin = i.detail_in_quantity
+#         bbb += sumin
+#     for u in detail_out_data:
+#         sumout = u.detail_out_quantity
+#         ddd += sumout
+#     sumtot = bbb - ddd
+#     return render(request, 'itemreport.html', {'item_data': item_data,
+#                                                'detail_in_data': detail_in_data, 'detail_out_data': detail_out_data,
+#                                                'sumin': bbb, 'sumout': ddd, 'sumtot': sumtot, 'page_title': page_title})
+
+# def supplier_report(request,the_supplier):
+#     page_title='Supplier Report'
+#     sumin = 0
+#     sumout = 0
+#     supplier_data = supplier.objects.get(supplier_id= the_supplier)
+#     master_in_data = master_in.objects.filter(Supplier_id=the_supplier)
+#     master_out_data = master_out.objects.filter(Supplier_id=the_supplier)
+#     for mi in master_in_data:
+#         the_master_in = mi.master_in_id
+#         detail_in_data = detail_in.objects.filter(Master_in_id=the_master_in)
+#         for di in detail_in_data:
+#             bb  = (di.detail_in_quantity)*(di.detail_in_price)
+#             sumin +=bb
+#     for mo in master_out_data:
+#         the_master_out = mo.master_out_id
+#         detail_out_data = detail_out.objects.filter(Master_out_id = the_master_out)
+#         for do in detail_out_data:
+#             tt = (do.detail_out_quantity)*(do.detail_out_price)
+#             sumout+=tt
+#     sumtot = sumin-sumout
+#     return render (request, 'supplierreport.html',{'supplier_data':supplier_data,'detail_in_data':detail_in_data,
+#     'page_title':page_title,'sumtot':f"{sumtot:,}"})
