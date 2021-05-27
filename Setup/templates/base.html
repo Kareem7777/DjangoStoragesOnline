@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Ma5azen</title>
-    
     {% load static %}<link rel="stylesheet" href="{% static '/m.css' %}">
-    <!-- {% load static %}<link rel="stylesheet" href="{% static '/setup.css' %}"> -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Original+Surfer&display=swap" rel="stylesheet">
     {% load static %}<link rel="icon" href="{% static '/imgs/logoo.png' %}" type="image/x-icon">
@@ -49,7 +46,6 @@
                       <li><a class="" href="{% url 'add-customer'%}" >Customer </a></li>
                       <li><a class="" href="{% url 'add-master-in'%}" >Master-In </a></li>
                       <li><a class="" href="{% url 'add-master-out'%}" >Master-Out </a></li>
-                      <li><a class="" href="{% url 'add-detail-in'%}" >Detail-In </a></li>
                       <li><a class="" href="{% url 'add-detail-out'%}" >Detail-Out </a></li>
                       <li><a class="" href="{% url 'cash_in_view'%}" >Cash-Out </a></li>
                   </ul>

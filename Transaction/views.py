@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -5,27 +6,24 @@ from django.urls import reverse
 from Transaction.models import *
 from Transaction.forms import *
 from Setup.models import *
+
 # Create your views here.
 
-
-def transaction_fun(request):
-    return HttpResponse('Hello from transaction function')
-
-
+@login_required
 def master_in_fun(request):
     aa = master_in.objects.all()
     ss = detail_in.objects.all()
     page_title = 'Master In Data'
-    return render(request, 'in.html',  {'data': aa, 'zata': ss, 'page_title': page_title})
+    return render(request, 'master_in.html',  {'data': aa, 'zata': ss, 'page_title': page_title})
 
-
+@login_required
 def master_out_fun(request):
     aa = master_out.objects.all()
     ss = detail_out.objects.all()
     page_title = 'Master Out Data'
-    return render(request, 'out.html',  {'data': aa, 'zata': ss, 'page_title': page_title})
+    return render(request, 'master_out.html',  {'data': aa, 'zata': ss, 'page_title': page_title})
 
-
+@login_required
 def addmaster_in(request):
     page_title = 'Add Master In'
     aa = master_in.objects.all()
@@ -37,13 +35,14 @@ def addmaster_in(request):
         newmaster_in = addmaster_inForm(request.POST)
         if newmaster_in.is_valid():
             newmaster_in.save()
-        return HttpResponseRedirect(reverse('add-master-in'))
+            master_id = master_in.objects.latest('master_in_id')
+        return HttpResponseRedirect(reverse('add-detail-in',args=(master_id,)))
     else:
         newmaster_in = addmaster_inForm
     args ={'page_title':page_title,'data': aa, 'item_data': ii, 'storage_data': ss, 'customer_data': cc, 'supplier_data': pp}
     return render(request, 'addmaster_in.html',args )
 
-
+@login_required
 def addmaster_out(request):
     page_title = 'Add Master Out'
     aa = master_out.objects.all()
@@ -52,7 +51,6 @@ def addmaster_out(request):
     cc = customer.objects.all()
     if request.method == 'POST':
         newmaster_out = addmaster_outForm(request.POST or None)
-
         if newmaster_out.is_valid():
             newmaster_out.save()
         return HttpResponseRedirect(reverse('add-master-out'))
@@ -61,24 +59,29 @@ def addmaster_out(request):
     args = {'page_title':page_title,'data': aa, 'storage_data': ss, 'customer_data': cc, 'supplier_data': pp}
     return render(request, 'addmaster_out.html',args )
 
-
-def adddetail_in(request):
+@login_required
+def adddetail_in(request, master_id):
     page_title = 'Add Detail In'
-    mm = master_in.objects.all()
+    numbers = ["0","1","2","3","4","5","6","7","8","9"]
+    the_master_id= []
+    for i  in master_id:
+        if i in numbers:
+            the_master_id.append(i)
+    the_master_id = int("".join(the_master_id))
+    mm = master_in.objects.get(master_in_id = the_master_id)
     aa = detail_in.objects.all()
     ii = items.objects.all()
     if request.method == 'POST':
         newdetail_in = adddetail_inForm(request.POST or None)
-
         if newdetail_in.is_valid():
             newdetail_in.save()
-        return HttpResponseRedirect(reverse('add-detail-in'))
+        return HttpResponseRedirect(reverse('add-detail-in',args = (master_id,)))
     else:
         newdetail_in = adddetail_inForm
     args = {'page_title':page_title,'detail_in_data': aa, 'item_data': ii, 'master_in_data': mm}
     return render(request, 'adddetail_in.html',args )
 
-
+@login_required
 def adddetail_out(request):
     page_title = 'Add Detail Out'
     mm = master_out.objects.all()
@@ -86,7 +89,6 @@ def adddetail_out(request):
     ii = items.objects.all()
     if request.method == 'POST':
         newdetail_out = adddetail_outForm(request.POST or None)
-
         if newdetail_out.is_valid():
             newdetail_out.save()
         return HttpResponseRedirect(reverse('add-detail-out'))
@@ -95,55 +97,21 @@ def adddetail_out(request):
     args = {'page_title':page_title,'detail_out_data': aa, 'item_data': ii, 'master_out_data': mm}
     return render(request, 'adddetail_out.html',args )
 
-
+@login_required
 def detail_in_fun(request, foreign_master_in_id):
     page_title = 'Detail In Data'
     aa = master_in.objects.get(master_in_id=foreign_master_in_id)
     bb = detail_in.objects.filter(Master_in_id=foreign_master_in_id)
     return render(request, 'detail_in.html', {'page_title':page_title,'data': aa, 'zata': bb})
 
-
+@login_required
 def detail_out_fun(request, foreign_master_out_id):
     page_title = 'Detail Out Data'
     aa = master_out.objects.get(master_out_id=foreign_master_out_id)
     bb = detail_out.objects.filter(Master_out_id=foreign_master_out_id)
     return render(request, 'detail_out.html', {'page_title':page_title,'data': aa, 'zata': bb})
 
-
-def try_in(request):
-    aa = master_in.objects.all()
-    ss = storage.objects.all()
-    pp = supplier.objects.all()
-    cc = customer.objects.all()
-    #submitted= False
-    if request.method == 'POST':
-        newmaster_in = addmaster_inForm(request.POST or None)
-
-        if newmaster_in.is_valid():
-            newmaster_in.save()
-        # return HttpResponseRedirect ('/Transaction/addmaster_in?submitted=True')
-    else:
-        newmaster_in = addmaster_inForm
-        # if 'submitted' in request.GET:
-        #     submitted= True
-    return render(request, 'out2.html', {'data': aa, 'storage_data': ss, 'customer_data': cc, 'supplier_data': pp})
-
-
-def tryde_in(request, foreign_master_in_id):
-    mm = master_in.objects.get(master_in_id=foreign_master_in_id)
-    dd = detail_in.objects.all()
-    ii = items.objects.all()
-    if request.method == 'POST':
-        newdetail_in = adddetail_inForm(request.POST)
-
-        if newdetail_in.is_valid():
-            newdetail_in.save()
-        # return HttpResponseRedirect ('/Transaction/adddetail_in?submitted=True')
-    else:
-        newdetail_in = adddetail_inForm
-    return render(request, 'try1.html', {'data': dd, 'mata': mm, 'iata': ii})
-
-
+@login_required
 def cash_in_view(request):  # nod finished
     page_title = 'Cash Out'
     mm = cash_in.objects.all()
@@ -151,7 +119,6 @@ def cash_in_view(request):  # nod finished
     ii = supplier.objects.all()
     if request.method == 'POST':
         addcash_inval = addcash_inForm(request.POST or None)
-
         if addcash_inval.is_valid():
             addcash_inval.save()
         return HttpResponseRedirect (reverse('cash-in-view'))
@@ -160,7 +127,7 @@ def cash_in_view(request):  # nod finished
     args = {'page_title':page_title,'oata': oo, 'iata': ii, 'mata': mm}
     return render(request, 'cash_in_view.html',args )
 
-
+@login_required
 def suppliers_report(request):
     page_title = 'Suppliers Report'
     ss = supplier.objects.all()
@@ -188,11 +155,10 @@ def suppliers_report(request):
         total = f"{total:,}"
         tot.append(total)
     my_list = zip(tot, ss)
-
     args = {'page_title': page_title, 'my_list': my_list}
     return render(request, 'suppliers_report.html', args)
 
-
+@login_required
 def customers_report(request):
     page_title = 'customers Report'
     ss = customer.objects.all()
@@ -220,11 +186,10 @@ def customers_report(request):
         total = f"{total:,}"
         tot.append(total)
     my_list = zip(tot, ss)
-
     args = {'page_title': page_title, 'my_list': my_list}
     return render(request, 'customers_report.html', args)
 
-
+@login_required
 def items_report(request):
     page_title = 'Items Report'
     ii = items.objects.all()
@@ -248,7 +213,42 @@ def items_report(request):
     args = {'page_title': page_title, 'my_list': my_list}
     return render(request, 'items_report.html', args)
 
+# @login_required
+# def transaction_fun(request):
+#     return HttpResponse('Hello from transaction function')
 
+#def try_in(request):
+#     aa = master_in.objects.all()
+#     ss = storage.objects.all()
+#     pp = supplier.objects.all()
+#     cc = customer.objects.all()
+#     #submitted= False
+#     if request.method == 'POST':
+#         newmaster_in = addmaster_inForm(request.POST or None)
+
+#         if newmaster_in.is_valid():
+#             newmaster_in.save()
+#         # return HttpResponseRedirect ('/Transaction/addmaster_in?submitted=True')
+#     else:
+#         newmaster_in = addmaster_inForm
+#         # if 'submitted' in request.GET:
+#         #     submitted= True
+#     return render(request, 'out2.html', {'data': aa, 'storage_data': ss, 'customer_data': cc, 'supplier_data': pp})
+
+
+# def tryde_in(request, foreign_master_in_id):
+#     mm = master_in.objects.get(master_in_id=foreign_master_in_id)
+#     dd = detail_in.objects.all()
+#     ii = items.objects.all()
+#     if request.method == 'POST':
+#         newdetail_in = adddetail_inForm(request.POST)
+
+#         if newdetail_in.is_valid():
+#             newdetail_in.save()
+#         # return HttpResponseRedirect ('/Transaction/adddetail_in?submitted=True')
+#     else:
+#         newdetail_in = adddetail_inForm
+#     return render(request, 'try1.html', {'data': dd, 'mata': mm, 'iata': ii})
 
 
 # def item_report(request, the_item):

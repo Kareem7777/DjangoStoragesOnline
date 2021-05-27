@@ -1,12 +1,9 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from Setup import models as setupmodel
+from Setup import models
 from .forms import *
 from Transaction import models as transactionmodel
-
-
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
@@ -19,31 +16,26 @@ def home(request):
 
 
 def item(request):
-
-    aa = setupmodel.items.objects.all()
-    # aa = setupmodel.objects.raw('SELECT * FROM Setup_items')
+    aa = items.objects.all()
     page_title = 'Items Data'
-
     return render(request, 'item.html', {'data': aa, 'page_title': page_title})
 
 
-def supplier(request):
-    aa = setupmodel.supplier.objects.all()
+def suppliers(request):
+    aa = supplier.objects.all()
     page_title = 'Suppliers Data'
     return render(request, 'supplier.html', {'data': aa, 'page_title': page_title})
 
 
-def customer(request):
-    aa = setupmodel.customer.objects.all()
+def customers(request):
+    aa = customer.objects.all()
     page_title = 'Customers Data'
-
     return render(request, 'customer.html', {'data': aa, 'page_title': page_title})
 
 
-def storage(request):
-    aa = setupmodel.storage.objects.all()
+def storages(request):
+    aa = storage.objects.all()
     page_title = 'Storages Data'
-
     return render(request, 'storage.html', {'data': aa, 'page_title': page_title})
 
 
