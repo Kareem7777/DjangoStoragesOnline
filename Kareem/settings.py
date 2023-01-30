@@ -131,10 +131,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR,'static')
+    os.path.join(BASE_DIR / "static")
 ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-LOGIN_REDIRECT_URL = '/Setup/home'
+LOGIN_REDIRECT_URL = '/'
 
 
 # Default primary key field type
